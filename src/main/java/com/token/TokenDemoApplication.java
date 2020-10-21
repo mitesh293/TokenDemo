@@ -1,23 +1,38 @@
 package com.token;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 
 @Configuration
-@EnableAsync
 @EnableScheduling
+@ComponentScan("com.token")
+@ConditionalOnProperty(value = "token.authentication.enabled")
+@RefreshScope
 public class TokenDemoApplication {
 
 	@Bean
 	public RestTemplate getRestTemplate(){
+		System.out.println("Rest Template Bean initialized...");
 		return new RestTemplate();
 	}
+
+	@Bean("sprxTaskScheduler")
+	public TaskScheduler taskScheduler(){
+		return new ConcurrentTaskScheduler();
+	}
+
 	@PostConstruct
 	private void init(){
 		System.out.println("Token Generator service initialized...");
