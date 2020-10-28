@@ -148,6 +148,5 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
-	</pluginRepositories
-	
+	</pluginRepositories>
 </project>
