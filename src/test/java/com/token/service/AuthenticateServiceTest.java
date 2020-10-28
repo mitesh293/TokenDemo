@@ -108,4 +108,5 @@ public class AuthenticateServiceTest {
         testMethod.invoke(tokenDemoApplication,null);
         //when(mockContext.getMethod()).thenReturn(testMethod);
     }
+	
 }
