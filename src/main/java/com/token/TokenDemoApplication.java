@@ -39,7 +39,7 @@ public class TokenDemoApplication {
 	}
 
 	@Scheduled(cron = "0 0/1 * * * ?")
-	public void cronJobSch() throws Exception {
+	private void cronJobSch() throws Exception {
 		System.out.println("Token scheduler service job run at ::"+java.time.LocalTime.now());
 	}
 }
