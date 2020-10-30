@@ -1,5 +1,7 @@
 package com.token;
 
+import com.token.Model.UserJdbc;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
@@ -22,16 +24,17 @@ import javax.annotation.PostConstruct;
 @ConditionalOnProperty(value = "token.authentication.enabled")
 @RefreshScope
 public class TokenDemoApplication {
+	public int counter=4;
+
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
 	@Bean
 	public RestTemplate getRestTemplate(){
 		System.out.println("Rest Template Bean initialized...");
 		return new RestTemplate();
 	}
-	@Bean
-	public JdbcTemplate getJdbcTemplate(){
-		return new JdbcTemplate();
-	}
+
 	@Bean("sprxTaskScheduler")
 	public TaskScheduler taskScheduler(){
 		return new ConcurrentTaskScheduler();
@@ -44,6 +47,12 @@ public class TokenDemoApplication {
 
 	@Scheduled(cron = "0 0/1 * * * ?")
 	private void cronJobSch() throws Exception {
+		saveAutoUser(counter++);
 		System.out.println("Token scheduler service job run at ::"+java.time.LocalTime.now());
+	}
+
+	void saveAutoUser(int counter) {
+		String sql = "insert into users( name, email) values (?, ?)";
+		jdbcTemplate.update(sql, "JobUser"+counter, "Job"+counter+"@gmail.com");
 	}
 }
